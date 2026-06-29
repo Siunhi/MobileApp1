@@ -5,10 +5,36 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 
 export default function LoginScreen() {
   const [phone, setPhone] = useState('');
+  const validatePhone = () => {
+  if (phone.trim() === "") {
+    alert(
+      "Vui lòng nhập số điện thoại!"
+    );
+    return;
+  }
+
+  // Chỉ gồm 10 số, bắt đầu bằng số 0
+  const phoneRegex = /^0\d{9}$/;
+
+  if (!phoneRegex.test(phone)) {
+    alert(
+      "Số điện thoại không đúng định dạng!"
+    );
+    return;
+  }
+
+  Alert.alert(
+    "Thành công",
+    "Số điện thoại hợp lệ."
+  );
+
+};
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Đăng nhập</Text>
@@ -25,16 +51,24 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Nhập số điện thoại của bạn"
-          keyboardType="phone-pad"
+          keyboardType="number-pad"
+          maxLength={10}
           value={phone}
           onChangeText={setPhone}
         />
 
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>
+        <TouchableOpacity
+          style={[
+          styles.button,phone.length > 0 && styles.buttonActive]}
+          onPress={validatePhone}
+        >
+          <Text
+            style={[
+            styles.buttonText,phone.length > 0 && styles.buttonTextActive]}
+          >
             Tiếp tục
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -45,6 +79,13 @@ const styles = StyleSheet.create({
     marginTop:20,
     flex:1,
     backgroundColor:'#fff'
+  },
+  buttonActive: {
+    backgroundColor: '#00C2A8',
+  },
+
+  buttonTextActive: {
+    color: '#fff',
   },
 
   header:{
